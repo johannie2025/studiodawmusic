@@ -1,0 +1,7 @@
+DOSSIER DES MODÈLES (hors-ligne)
+Placez ici les dossiers de modèles, chacun contenant config.json + *.safetensors :
+  models/musicgen-small/     (obligatoire pour générer)
+  models/musicgen-melody/    (recommandé : génération guidée par la voix / une piste)
+  models/torch/hub/checkpoints/  (optionnel : poids Demucs pour la séparation de stems)
+Obtention : python download_models.py --melody --demucs  (sur un PC avec Internet, une seule fois).
+Licence : les poids MusicGen (Meta) sont en CC-BY-NC 4.0 (usage non commercial).

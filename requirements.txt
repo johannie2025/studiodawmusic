@@ -1,0 +1,11 @@
+fastapi>=0.110
+uvicorn>=0.29
+python-multipart>=0.0.9
+numpy
+scipy
+imageio-ffmpeg
+torch>=2.1,<2.9
+torchaudio>=2.1,<2.9
+transformers>=4.44
+# Optionnel : séparation de stems
+# demucs

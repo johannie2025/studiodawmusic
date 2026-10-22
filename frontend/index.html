@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wise Design Studio by Maestro Josias</title>
+<link rel="icon" href="/static/assets/logo.jpg"><link rel="stylesheet" href="/static/style.css"></head>
+<body>
+<header id="top">
+  <div class="brand"><img src="/static/assets/logo.jpg" alt="W Design"><div><h1>Wise Design Studio</h1><small>by Maestro Josias</small></div></div>
+  <input id="projName" title="Nom du projet">
+  <div class="row"><button id="bNew">Nouveau</button><button id="bOpen">Ouvrir</button><button id="bSave">Sauver</button><button id="bImport">Importer audio</button><button id="bExport" class="accent">Exporter WAV / MP3</button></div>
+  <input type="file" id="fileImport" accept="audio/*,video/*" hidden>
+</header>
+<section id="transport">
+  <button id="bRew" title="Début">⏮</button><button id="bPlay" title="Lecture / Pause (Espace)">▶</button><button id="bStop" title="Stop">⏹</button><button id="bRec" class="rec" title="Enregistrer (R)">⏺</button>
+  <span id="clock">00:00.00</span>
+  <label>BPM <input id="bpm" type="number" min="40" max="220" value="100"></label>
+  <label class="chk"><input type="checkbox" id="metro">Métronome</label>
+  <label class="chk"><input type="checkbox" id="countin" checked>Décompte</label>
+  <label class="chk"><input type="checkbox" id="snap" checked>Aimant</label>
+  <label>Zoom <input id="zoom" type="range" min="10" max="300" value="80"></label>
+  <label>Master <input id="masterVol" type="range" min="-30" max="6" step="0.5" value="0"></label>
+  <canvas id="masterMeter" width="120" height="16"></canvas>
+  <div class="grow"></div>
+  <button id="bAddTrack">+ Piste</button><button id="bSplit" title="Couper au curseur (S)">✂ Couper</button><button id="bDel" title="Supprimer (Suppr)">🗑 Suppr.</button><button id="bUndo" title="Ctrl+Z">↶</button>
+</section>
+<main>
+  <div id="tl"><div id="tlInner"></div></div>
+  <aside id="side">
+    <nav id="tabs"><button data-t="gen" class="on">IA Musique</button><button data-t="assistant">Assistant</button><button data-t="inspector">Piste</button><button data-t="settings">Réglages</button></nav>
+    <div class="tab" id="t-gen">
+      <label>Description de l'instrumental</label>
+      <textarea id="gPrompt" rows="3" placeholder="Gospel traditionnel bikutsi, piano, basse, percussions chaleureuses"></textarea>
+      <div class="chips" id="chips"></div>
+      <label>Source</label>
+      <div class="radios">
+        <label><input type="radio" name="gsrc" value="free" checked> Libre (texte seul)</label>
+        <label><input type="radio" name="gsrc" value="melody"> Suivre une mélodie (voix / piste)</label>
+        <label><input type="radio" name="gsrc" value="continue"> Prolonger le clip sélectionné</label>
+      </div>
+      <div id="gWhatBox" hidden><label>Mélodie prise depuis</label>
+        <select id="gWhat"><option value="clip">Clip sélectionné</option><option value="track">Piste sélectionnée (mixée)</option><option value="mix">Mix complet</option><option value="file">Fichier importé…</option></select>
+        <input type="file" id="gFile" accept="audio/*" hidden></div>
+      <div class="grid2"><label>Durée (s)<input id="gDur" type="number" min="5" max="180" value="30"></label>
+        <label>Placer sur<select id="gPlace"><option value="t1">Piste 1</option><option value="sel">Piste sélectionnée</option><option value="new">Nouvelle piste</option></select></label>
+        <label>Température<input id="gTemp" type="number" step="0.1" min="0.3" max="1.5" value="1.0"></label>
+        <label>Fidélité au texte<input id="gGuid" type="number" step="0.5" min="1" max="8" value="3"></label></div>
+      <button id="bGen" class="accent wide">✨ Générer l'instrumental</button>
+      <div class="prog" id="gProg" hidden><div></div><span></span></div>
+      <hr><label>Outils IA sur le clip sélectionné</label>
+      <div class="row wrap"><button id="bStems">Séparer en stems</button><button id="bBpm">Détecter le BPM</button><button id="bAuto">Mixage auto</button></div>
+      <small id="gStatus" class="muted"></small>
+    </div>
+    <div class="tab" id="t-assistant" hidden>
+      <div id="chat"></div>
+      <div class="row"><input id="chatIn" placeholder="ex : baisse l'instru de 3 dB et ajoute de la reverb sur la voix"><button id="chatSend" class="accent">Envoyer</button></div>
+      <small class="muted" id="chatMode"></small>
+    </div>
+    <div class="tab" id="t-inspector" hidden><div id="insp"></div></div>
+    <div class="tab" id="t-settings" hidden>
+      <label>Assistant IA en ligne (offre gratuite) — désactivé = 100 % hors-ligne</label>
+      <label class="chk"><input type="checkbox" id="sEnabled"> Activer l'IA en ligne</label>
+      <label>Fournisseur<select id="sProv"></select></label>
+      <label>Clé API (gratuite chez le fournisseur)<input id="sKey" type="password" placeholder="(inchangée si vide)"></label>
+      <label>Modèle (optionnel)<input id="sModel"></label>
+      <label>URL de base (optionnel / personnalisé)<input id="sBase"></label>
+      <button id="sSave" class="accent">Enregistrer</button><small class="muted">La clé est stockée localement dans data/settings.json. Seul le texte de vos commandes et l'état du mix (jamais l'audio) est envoyé.</small>
+      <hr><label>Latence micro (ms)<input id="sLat" type="number" value="0"></label>
+      <hr><div id="sysStatus" class="muted"></div>
+    </div>
+  </aside>
+</main>
+<footer>© Wise Design Studio by Maestro Josias — WhatsApp : <a href="https://wa.me/240222886007" target="_blank">+240 222 886 007</a> · <a href="https://wa.me/240555593398" target="_blank">+240 555 593 398</a></footer>
+<script src="/static/app.js"></script>
+</body></html>
