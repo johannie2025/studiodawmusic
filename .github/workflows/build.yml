@@ -30,9 +30,9 @@ jobs:
         with:
           node-version: '20'
 
-      - name: 📦 Installation des dépendances Frontend & Compilation Vite
+      - name: 📦 Installation des dépendances Frontend & Compilation Vite 
         run: |
-          npm install --legacy-peer-deps
+          npm install --include=optional
           npm run build
 
       - name: 🔧 Installation des dépendances Python (CPU-only PyTorch & AudioCraft)
