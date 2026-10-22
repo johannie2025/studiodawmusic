@@ -1,0 +1,6 @@
+{
+  "name": "DAW IA Pro - Studio Chantres Offline & GitHub Actions EXE",
+  "description": "Station audio numérique (DAW) IA 100% hors-ligne pour la création d'instrumentaux et l'enregistrement de chantres, avec exporteur de ZIP pour compilation Windows .exe via GitHub Actions.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
