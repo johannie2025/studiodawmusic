@@ -1,86 +1,87 @@
 name: Build Windows EXE (DAW IA Pro Standalone)
 
 on:
-  push:
-    branches: [ main, master ]
-    tags:
-      - 'v*'
-  workflow_dispatch:
+push:
+branches: [ main, master ]
+tags:
+- 'v*'
+workflow_dispatch:
 
 permissions:
-  contents: write
+contents: write
 
 jobs:
-  build-windows:
-    name: Compilation Windows x64 (PyInstaller Standalone)
-    runs-on: windows-latest
+build-windows:
+name: Compilation Windows x64 (PyInstaller Standalone)
+runs-on: windows-latest
 
-    steps:
-      - name: 📥 Récupération du code source
-        uses: actions/checkout@v4
+steps:
+  - name: 📥 Récupération du code source
+    uses: actions/checkout@v4
 
-      - name: 🐍 Configuration de Python 3.10
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-          cache: 'pip'
+  - name: 🐍 Configuration de Python 3.10
+    uses: actions/setup-python@v5
+    with:
+      python-version: '3.10'
+      cache: 'pip'
 
-      - name: ⚡ Configuration de Node.js pour le Frontend DAW
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+  - name: ⚡ Configuration de Node.js pour le Frontend DAW
+    uses: actions/setup-node@v4
+    with:
+      node-version: '20'
+      cache: 'npm'
 
-      - name: 📦 Installation des dépendances Frontend & Compilation Vite
-        run: |
-          npm ci || npm install
-          npm run build
+  - name: 📦 Installation des dépendances Frontend & Compilation Vite
+    run: |
+      npm ci --legacy-peer-deps
+      npm run build
 
-      - name: 🔧 Installation des dépendances Python (CPU-only PyTorch & AudioCraft)
-        run: |
-          python -m pip install --upgrade pip setuptools wheel
-          pip install torch==2.2.2+cpu torchaudio==2.2.2+cpu --extra-index-url https://download.pytorch.org/whl/cpu
-          pip install -r requirements.txt
-          pip install pyinstaller
+  - name: 🔧 Installation des dépendances Python (CPU-only PyTorch & AudioCraft)
+    run: |
+      python -m pip install --upgrade pip setuptools wheel
+      pip install torch==2.2.2+cpu torchaudio==2.2.2+cpu --extra-index-url https://download.pytorch.org/whl/cpu
+      pip install -r requirements.txt
+      pip install pyinstaller
 
-      - name: 🏗️ Compilation de l'exécutable MonStudio.exe
-        run: |
-          python build_app.py
+  - name: 🏗️ Compilation de l'exécutable MonStudio.exe
+    run: |
+      python build_app.py
 
-      - name: 📁 Vérification de l'arborescence finale
-        shell: bash
-        run: |
-          ls -la dist/MonStudioChantres/
-          echo "Arborescence créée :"
-          find dist/MonStudioChantres/ -maxdepth 2
+  - name: 📁 Vérification de l'arborescence finale
+    shell: bash
+    run: |
+      ls -la dist/MonStudioChantres/
+      echo "Arborescence créée :"
+      find dist/MonStudioChantres/ -maxdepth 2
 
-      - name: 🗜️ Compression du package Windows
-        shell: bash
-        run: |
-          cd dist
-          7z a -tzip MonStudio-DAW-IA-Windows-x64.zip MonStudioChantres/
-          cd ..
+  - name: 🗜️ Compression du package Windows
+    shell: bash
+    run: |
+      cd dist
+      7z a -tzip MonStudio-DAW-IA-Windows-x64.zip MonStudioChantres/
+      cd ..
 
-      - name: 🚀 Publication de l'Artefact GitHub Actions
-        uses: actions/upload-artifact@v4
-        with:
-          name: MonStudio-DAW-IA-Windows-x64
-          path: dist/MonStudio-DAW-IA-Windows-x64.zip
-          retention-days: 30
+  - name: 🚀 Publication de l'Artefact GitHub Actions
+    uses: actions/upload-artifact@v4
+    with:
+      name: MonStudio-DAW-IA-Windows-x64
+      path: dist/MonStudio-DAW-IA-Windows-x64.zip
+      retention-days: 30
 
-      - name: 🏷️ Création d'une Release GitHub (si tag v*)
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: dist/MonStudio-DAW-IA-Windows-x64.zip
-          name: "Wise Design Studio DAW IA Pro v${{ github.ref_name }}"
-          body: |
-            ## 🎵 Wise Design Studio by Maestro Josias - DAW IA Pro
-            **Contact WhatsApp** : +240222886007 / +240555593398
-            
-            ### Contenu de l'archive distribuée :
-            - `MonStudio.exe` : Application bureau native Windows 64-bit
-            - `_internal/` : Bibliothèques PyTorch CPU et dépendances compilées
-            - `models/` : Répertoire dédié pour les poids d'IA locaux
-            - `outputs/` : Dossier des instrumentaux et voix enregistrées
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  - name: 🏷️ Création d'une Release GitHub (si tag v*)
+    if: startsWith(github.ref, 'refs/tags/v')
+    uses: softprops/action-gh-release@v2
+    with:
+      files: dist/MonStudio-DAW-IA-Windows-x64.zip
+      name: "Wise Design Studio DAW IA Pro v${{ github.ref_name }}"
+      body: |
+        ## 🎵 Wise Design Studio by Maestro Josias - DAW IA Pro
+        **Contact WhatsApp** : +240222886007 / +240555593398
+        
+        ### Contenu de l'archive distribuée :
+        - `MonStudio.exe` : Application bureau native Windows 64-bit
+        - `_internal/` : Bibliothèques PyTorch CPU et dépendances compilées
+        - `models/` : Répertoire dédié pour les poids d'IA locaux
+        - `outputs/` : Dossier des instrumentaux et voix enregistrées
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
