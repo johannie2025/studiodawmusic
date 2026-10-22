@@ -19,6 +19,10 @@ jobs:
       - name: 📥 Récupération du code source
         uses: actions/checkout@v4
 
+      - name: 🌐 Activation des chemins longs Windows (Long Paths)
+        run: |
+          git config --global core.longpaths true
+
       - name: 🐍 Configuration de Python 3.10
         uses: actions/setup-python@v5
         with:
