@@ -1,0 +1,1 @@
+Déposez ici les poids musicgen-small (state_dict.bin ou .safetensors)

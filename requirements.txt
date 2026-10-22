@@ -1,0 +1,12 @@
+# Wise Design Studio by Maestro Josias - Dépendances Python CPU
+fastapi>=0.110.0
+uvicorn[standard]>=0.28.0
+pywebview>=5.0.0
+python-multipart>=0.0.9
+pydantic>=2.6.0
+audiocraft>=1.3.0
+demucs>=4.0.1
+soundfile>=0.12.1
+scipy>=1.12.0
+numpy>=1.26.0
+pyinstaller>=6.5.0
