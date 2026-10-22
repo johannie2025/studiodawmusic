@@ -19,10 +19,6 @@ jobs:
       - name: 📥 Récupération du code source
         uses: actions/checkout@v4
 
-      - name: 🌐 Activation des chemins longs Windows (Long Paths)
-        run: |
-          git config --global core.longpaths true
-
       - name: 🐍 Configuration de Python 3.10
         uses: actions/setup-python@v5
         with:
@@ -42,6 +38,7 @@ jobs:
       - name: 🔧 Installation des dépendances Python (CPU-only PyTorch & AudioCraft)
         run: |
           python -m pip install --upgrade pip setuptools wheel
+          # Installation PyTorch CPU optimisé (sans CUDA pour un binaire léger)
           pip install torch==2.2.2+cpu torchaudio==2.2.2+cpu --extra-index-url https://download.pytorch.org/whl/cpu
           pip install -r requirements.txt
           pip install pyinstaller
@@ -76,15 +73,19 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: dist/MonStudio-DAW-IA-Windows-x64.zip
-          name: "Wise Design Studio DAW IA Pro v${{ github.ref_name }}"
+          name: "DAW IA Pro Standalone v${{ github.ref_name }}"
           body: |
-            ## 🎵 Wise Design Studio by Maestro Josias - DAW IA Pro
-            **Contact WhatsApp** : +240222886007 / +240555593398
+            ## 🎵 DAW IA Pro - MonStudio Chantres (Édition Hors-Ligne CPU)
             
-            ### Contenu de l'archive distribuée :
-            - `MonStudio.exe` : Application bureau native Windows 64-bit
-            - `_internal/` : Bibliothèques PyTorch CPU et dépendances compilées
-            - `models/` : Répertoire dédié pour les poids d'IA locaux
-            - `outputs/` : Dossier des instrumentaux et voix enregistrées
+            ### Contenu de l'archive :
+            - `MonStudio.exe` : Lanceur exécutable autonome pour Windows 10/11
+            - `_internal/` : Bibliothèques binaires Python, PyTorch CPU et dépendances
+            - `models/` : Dossier dédié pour vos poids de modèles MusicGen et Demucs
+            - `outputs/` : Dossier des instrumentaux générés et voix enregistrées
+            
+            ### Guide d'installation :
+            1. Dézippez `MonStudio-DAW-IA-Windows-x64.zip` dans le dossier de votre choix (ex: `C:\MonStudioChantres\`).
+            2. Placez vos modèles dans le dossier `models/musicgen-small/`.
+            3. Double-cliquez sur `MonStudio.exe` !
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
