@@ -16,15 +16,18 @@
   <label class="chk"><input type="checkbox" id="metro">Métronome</label>
   <label class="chk"><input type="checkbox" id="countin" checked>Décompte</label>
   <label class="chk"><input type="checkbox" id="snap" checked>Aimant</label>
-  <label>Zoom <input id="zoom" type="range" min="10" max="300" value="80"></label>
+  <label class="chk"><input type="checkbox" id="follow" checked>Suivre</label>
+  <label>Zoom <input id="zoom" type="range" min="5" max="600" value="80" title="Zoom (G = +, H = −)"></label>
   <label>Master <input id="masterVol" type="range" min="-30" max="6" step="0.5" value="0"></label>
   <canvas id="masterMeter" width="120" height="16"></canvas>
   <div class="grow"></div>
-  <button id="bAddTrack">+ Piste</button><button id="bSplit" title="Couper au curseur (S)">✂ Couper</button><button id="bDel" title="Supprimer (Suppr)">🗑 Suppr.</button><button id="bUndo" title="Ctrl+Z">↶</button>
+  <button id="bAddTrack" title="Ajouter une piste (T)">+ Piste</button><button id="bConsole" title="Console de mixage (F3)">🎚 Console</button><button id="bFloat" title="Barre de transport flottante (F2)">⏯ Barre</button><button id="bKeys" title="Raccourcis clavier (?)">⌨</button><button id="bSplit" title="Couper au curseur (S)">✂ Couper</button><button id="bDel" title="Supprimer (Suppr)">🗑 Suppr.</button><button id="bUndo" title="Ctrl+Z">↶</button>
 </section>
 <main>
   <div id="tl"><div id="tlInner"></div></div>
   <aside id="side">
+    <button id="sideHandle" title="Plier / déplier le panneau (B)">›</button>
+    <div id="sideBody">
     <nav id="tabs"><button data-t="gen" class="on">IA Musique</button><button data-t="assistant">Assistant</button><button data-t="inspector">Piste</button><button data-t="settings">Réglages</button></nav>
     <div class="tab" id="t-gen">
       <label>Description de l'instrumental</label>
@@ -66,8 +69,18 @@
       <hr><label>Latence micro (ms)<input id="sLat" type="number" value="0"></label>
       <hr><div id="sysStatus" class="muted"></div>
     </div>
+    </div>
   </aside>
 </main>
+<section id="console" hidden><div id="consoleResize" title="Redimensionner"></div><div id="consoleBar"><b>🎚 Console de mixage</b><span class="muted">Double-clic sur un fader/potard = remise à zéro</span><div class="grow"></div><button id="bAddGroup">+ Groupe d'effets</button><button id="bConsoleClose">✕</button></div><div id="strips"></div></section>
 <footer>© Wise Design Studio by Maestro Josias — WhatsApp : <a href="https://wa.me/240222886007" target="_blank">+240 222 886 007</a> · <a href="https://wa.me/240555593398" target="_blank">+240 555 593 398</a></footer>
+<div id="fbar" hidden>
+  <span id="fgrip" title="Glisser pour déplacer">⠿</span>
+  <button id="fRew" title="Début (Début)">⏮</button><button id="fStop" title="Stop">⏹</button><button id="fPlay" class="bplay" title="Lecture / Stop (Espace)">▶</button><button id="fRec" class="rec" title="Enregistrer (R)">⏺</button>
+  <div id="fclockw"><span id="fbars">001.1</span><span id="fclock">00:00.00</span></div>
+  <label class="chk" title="Métronome"><input type="checkbox" id="fMetro">♩</label>
+  <button id="fClose" title="Masquer (F2)">✕</button>
+</div>
+<div id="modal" hidden><div id="modalBox"></div></div>
 <script src="/static/app.js"></script>
 </body></html>
