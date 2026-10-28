@@ -47,17 +47,25 @@ jobs:
       - name: Test de démarrage (smoke test)
         shell: pwsh
         run: |
-          $p = Start-Process -FilePath "dist\WiseDesignStudio\WiseDesignStudio.exe" -PassThru
+          $env:WDS_NO_BROWSER = "1"
+          $exe = Resolve-Path "dist\WiseDesignStudio\WiseDesignStudio.exe"
+          $p = Start-Process -FilePath $exe -PassThru -WorkingDirectory (Split-Path $exe) -RedirectStandardOutput smoke_out.log -RedirectStandardError smoke_err.log
           $ok = $false
-          foreach ($i in 1..40) {
+          foreach ($i in 1..80) {
             Start-Sleep -Seconds 3
+            if ($p.HasExited) { Write-Host "Processus terminé prématurément (code $($p.ExitCode))"; break }
             try {
               $r = Invoke-RestMethod http://127.0.0.1:8765/api/status -TimeoutSec 5
               if ($r.app) { Write-Host "OK: $($r.app)"; $ok = $true; break }
             } catch {}
           }
           Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
-          if (-not $ok) { throw "L'application n'a pas démarré (voir logs)" }
+          if (-not $ok) {
+            Write-Host "===== STDOUT ====="; if (Test-Path smoke_out.log) { Get-Content smoke_out.log }
+            Write-Host "===== STDERR ====="; if (Test-Path smoke_err.log) { Get-Content smoke_err.log }
+            Write-Host "===== crash.log ====="; $c = "dist\WiseDesignStudio\data\crash.log"; if (Test-Path $c) { Get-Content $c }
+            throw "L'application n'a pas démarré (voir logs ci-dessus)"
+          }
 
       - name: Archiver le livrable
         shell: pwsh
